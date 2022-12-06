@@ -1,2 +1,2 @@
 #!/bin/bash
-echo $((0xfee10000))
+printf '%x\n' 26
