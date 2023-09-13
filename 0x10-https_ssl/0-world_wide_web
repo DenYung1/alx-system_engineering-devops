@@ -1,19 +1,20 @@
 #!/usr/bin/env bash
-# Shows information about subdomains.
+# Bash script that will display information about the subdomains.
 
-domain_information() {
-    local domain="$1"
-    local subdomain="$2"
-    local line
-    line=$(dig "$subdomain"."$domain" | awk '/ANSWER SECTION:/ {getline; print; getline; print}')
-    echo "$subdomain $line" | awk '{printf "The subdomain %s is a %s record and points to %s\n", $1, $2, $3}'
+info () {
+    if [ "${#}" -eq 2 ]; then
+	www="$(dig "${2}.${1}" | awk "/A\t[0-9]/" | tr "\t " "~" | cut -d "~" -f 5-11)"
+	echo "The subdomain ${2} is a A record and points to ${www}"
+    elif [ "${#}" -eq 1 ]; then
+	www="$(dig "www.${1}" | awk "/A\t[0-9]/" | tr "\t " "~" | cut -d "~" -f 5-11)"
+	lb="$(dig "lb-01.${1}" | awk "/A\t[0-9]/" | tr "\t " "~" | cut -d "~" -f 5-11)"
+	w1="$(dig "web-01.${1}" | awk "/A\t[0-9]/" | tr "\t " "~" | cut -d "~" -f 5-11)"
+	w2="$(dig "web-02.${1}" | awk "/A\t[0-9]/" | tr "\t " "~" | cut -d "~" -f 5-11)"
+	echo "The subdomain www is a A record and points to ${www}"
+	echo "The subdomain lb-01 is a A record and points to ${lb}"
+	echo "The subdomain web-01 is a A record and points to ${w1}"
+	echo "The subdomain web-02 is a A record and points to ${w2}"
+    fi
 }
 
-if [ "$#" -eq 1 ]; then
-    domain_information "$1" "www"
-    domain_information "$1" "lb-01"
-    domain_information "$1" "web-01"
-    domain_information "$1" "web-02"
-elif [ "$#" -eq 2 ]; then
-    domain_information "$1" "$2"
-fi
+info $1 $2
