@@ -31,14 +31,24 @@ defaults
         errorfile 504 /etc/haproxy/errors/504.http
 
 
-frontend my_frontend
+frontend http
         bind *:80
-        bind *:443 ssl crt /etc/letsencrypt/live/abrahamdesign.tech/fullchain.pem
-        http-request redirect scheme https code 301 unless { ssl_fc }
         mode http
-        default_backend my_backend_1
+        http-request add-header X-Forwarded-Proto http
+        default_backend DenYung1_backend
 
-backend my_backend_1
+frontend https
+    bind *:443 ssl crt /etc/letsencrypt/live/www.dennisabayateye.tech/newfullchain.pem
+    http-request add-header X-Forwarded-Proto https
+    acl    letsencrypt-acl path_beg /.well-known/acme-challenge/
+    use_backend letsencrypt-backend if letsencrypt-acl
+    default_backend DenYung1_backend
+
+backend DenYung1_backend
         balance roundrobin
-        server 15722-web-01 44.200.24.16:80 check
-    	server 15722-web-02 44.192.95.149:80 check
+        redirect scheme https if !{ ssl_fc }
+        server 196358-web-01 54.174.117.109:80 check
+        server 196358-web-02 54.146.60.122:80 check
+
+backend letsencrypt-backend
+    server letsencrypt 127.0.0.1:54321
