@@ -47,8 +47,8 @@ frontend https
 backend DenYung1_backend
         balance roundrobin
         redirect scheme https if !{ ssl_fc }
-        server 196358-web-01 54.174.117.109:80 check
-        server 196358-web-02 54.146.60.122:80 check
+        server 196358-web-01 54.82.200.246:80 check
+        server 196358-web-02 100.26.237.57:80 check
 
 backend letsencrypt-backend
     server letsencrypt 127.0.0.1:54321
