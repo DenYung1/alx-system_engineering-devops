@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-# server-02 login
-
-
-
-
-ssh ubuntu@52.91.128.189
