@@ -1,1 +1,1 @@
-Application Server
+APPLICATION SERVER
