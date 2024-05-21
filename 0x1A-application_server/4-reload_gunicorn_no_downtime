@@ -1,1 +1,3 @@
-Lets see
+#!/usr/bin/env bash
+
+grep gunicore | xargs kill -HUP
